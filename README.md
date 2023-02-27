@@ -4,6 +4,8 @@ Simple PHP WebServer running from a single file
 
 ## Usage
 
+### Linux
+
 Simply run it with:
 
 ```console
@@ -22,6 +24,32 @@ And it will use hardcoded port and hostname. To define something else, simply us
 $ ./server.php [interface:port] [document_root]
 ```
 
+### MacOS
+
+Simply run it with:
+
+```console
+$ php server.mac.php
+```
+
+Or
+
+```console
+$ ./server.mac.php
+```
+
+And it will use hardcoded port and hostname. To define something else, simply use the following arguments:
+
+```console
+$ ./server.mac.php [interface:port] [document_root]
+```
+
+> Thanks to [@staatzstreich](https://github.com/staatzstreich) for this part!
+
 ## Author
 
 * [@Jiab77](https://github.com/Jiab77)
+
+## Contributors
+
+* [@staatzstreich](https://github.com/staatzstreich)
