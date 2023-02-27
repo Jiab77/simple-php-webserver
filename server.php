@@ -2,22 +2,25 @@
 
 <?php
 // Defaults
-$debug = true;
-$script = basename(__FILE__);
-$current_path = __DIR__;
-$nproc = trim(`nproc`);
-$default_interface = '127.0.0.1';
-$default_port = 8000;
-$delete_fake_index = false;
+$config = new StdClass;
+$config->debug = true;
+$config->version = '0.1.0';
+$config->script = basename(__FILE__);
+$config->current_path = __DIR__;
+$config->nproc = trim(`nproc`);
+$config->default_interface = '127.0.0.1';
+$config->default_port = 8000;
+$config->delete_fake_index = false;
 
 // User settings
 if ($argc >= 2) {
     $network_access = explode(':', escapeshellarg($argv[1]));
     if (count($network_access) === 2) {
-        $user_interface = $network_access[0];
-        $user_port = (int)$network_access[1];
+        $config->user_interface = $network_access[0];
+        $config->user_port = (int)$network_access[1];
     } else {
-        $user_port = (int)str_replace("'", "", escapeshellarg($argv[1]));
+        $config->user_interface = $config->default_interface;
+        $config->user_port = (int)str_replace("'", "", escapeshellarg($argv[1]));
     }
 }
 
@@ -33,13 +36,7 @@ function create_fake_index($path = null)
 }
 function run_server()
 {
-    global $default_interface,
-        $default_port,
-        $user_interface,
-        $user_port,
-        $nproc,
-        $argc,
-        $argv;
+    global $config, $argc, $argv;
 
     echo 'Starting web server...' . PHP_EOL;
     echo 'Press [Ctrl + C] to stop it.' . PHP_EOL;
@@ -47,39 +44,45 @@ function run_server()
     if ($argc === 3) {
         pcntl_exec(
             trim(`which php`),
-            ['-S', (isset($user_interface) ? $user_interface : $default_interface) . ':' . (isset($user_port) ? $user_port : $default_port), '-t', $argv[2]],
-            ['PHP_CLI_SERVER_WORKERS' => $nproc]
+            ['-S', (isset($config->user_interface) ? $config->user_interface : $config->default_interface) . ':' . (isset($config->user_port) ? $config->user_port : $config->default_port), '-t', $argv[2]],
+            ['PHP_CLI_SERVER_WORKERS' => $config->nproc]
         );
     } else {
         pcntl_exec(
             trim(`which php`),
-            ['-S', (isset($user_interface) ? $user_interface : $default_interface) . ':' . (isset($user_port) ? $user_port : $default_port)],
-            ['PHP_CLI_SERVER_WORKERS' => $nproc]
+            ['-S', (isset($config->user_interface) ? $config->user_interface : $config->default_interface) . ':' . (isset($config->user_port) ? $config->user_port : $config->default_port)],
+            ['PHP_CLI_SERVER_WORKERS' => $config->nproc]
         );
     }
 }
 
 // Display
-echo $script . ' - Self PHP Web Server' . PHP_EOL . PHP_EOL;
+echo $config->script . ' - Self PHP Web Server - v' . $config->version . PHP_EOL . PHP_EOL;
 if ($argc >= 2 && ($argv[1] === '-h' || $argv[1] === '--help')) {
-    echo ' - Usage: ' . $script . ' [interface:port] [/path/to/serve]' . PHP_EOL . PHP_EOL;
+    echo ' - Usage: ' . $config->script . ' [interface:port] [/path/to/serve]' . PHP_EOL . PHP_EOL;
     echo ' - System Info:' . PHP_EOL;
-    echo "\t" . '- Current Path: ' . $current_path . PHP_EOL;
-    echo "\t" . '- CPU Cores: ' . $nproc . PHP_EOL;
+    echo "\t" . '- Current Path: ' . $config->current_path . PHP_EOL;
+    echo "\t" . '- CPU Cores: ' . $config->nproc . PHP_EOL;
     echo "\t" . '- OS: ' . PHP_OS . PHP_EOL;
     echo "\t" . '- PHP: ' . PHP_VERSION . PHP_EOL;
     echo PHP_EOL;
     exit(1);
 }
-if ($debug === true) {
+if ($config->debug === true) {
+    echo ' - System Info:' . PHP_EOL;
+    echo "\t" . '- Current Path: ' . $config->current_path . PHP_EOL;
+    echo "\t" . '- CPU Cores: ' . $config->nproc . PHP_EOL;
+    echo "\t" . '- OS: ' . PHP_OS . PHP_EOL;
+    echo "\t" . '- PHP: ' . PHP_VERSION . PHP_EOL;
+    echo PHP_EOL;
     echo ' - Debug:' . PHP_EOL;
     echo "\t" . ' - Args: ' . implode(',', $argv) . PHP_EOL;
     echo "\t" . ' - Count: ' . $argc . PHP_EOL;
-    echo "\t" . ' - Env: PHP_CLI_SERVER_WORKERS=' . $nproc . PHP_EOL;
+    echo "\t" . ' - Env: PHP_CLI_SERVER_WORKERS=' . $config->nproc . PHP_EOL;
     if ($argc === 3) {
-        echo "\t" . ' - Command: ' . trim(`which php`) . ' -S ' . (isset($user_interface) ? $user_interface : $default_interface) . ':' . (isset($user_port) ? $user_port : $default_port) . ' -t ' . $argv[2] . PHP_EOL;
+        echo "\t" . ' - Command: ' . trim(`which php`) . ' -S ' . (isset($config->user_interface) ? $config->user_interface : $config->default_interface) . ':' . (isset($config->user_port) ? $config->user_port : $config->default_port) . ' -t ' . $argv[2] . PHP_EOL;
     } else {
-        echo "\t" . ' - Command: ' . trim(`which php`) . ' -S ' . (isset($user_interface) ? $user_interface : $default_interface) . ':' . (isset($user_port) ? $user_port : $default_port) . PHP_EOL;
+        echo "\t" . ' - Command: ' . trim(`which php`) . ' -S ' . (isset($config->user_interface) ? $config->user_interface : $config->default_interface) . ':' . (isset($config->user_port) ? $config->user_port : $config->default_port) . PHP_EOL;
     }
     echo PHP_EOL;
 }
