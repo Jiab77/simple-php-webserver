@@ -46,10 +46,10 @@ $ ./server.mac.php [interface:port] [document_root]
 
 > Thanks to [@staatzstreich](https://github.com/staatzstreich) for this part!
 
-## Author
-
-* [@Jiab77](https://github.com/Jiab77)
-
 ## Contributors
 
 * [@staatzstreich](https://github.com/staatzstreich)
+
+## Author
+
+* [@Jiab77](https://github.com/Jiab77)
