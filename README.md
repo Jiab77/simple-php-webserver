@@ -48,7 +48,16 @@ $ ./server.mac.php [interface:port] [document_root]
 
 ## Contributors
 
-* [@staatzstreich](https://github.com/staatzstreich)
+<table>
+    <tr>
+    <td align="center"><strong>Nickname</strong></td>
+    <td align="center"><strong>Contribution</strong></td>
+    </tr>
+    <tr>
+      <td align="center"><a href="https://github.com/staatzstreich" target="_blank">@staatzstreich</a></td>
+      <td>For the MacOS version of the script.</td>
+    </tr>
+</table>
 
 ## Author
 
